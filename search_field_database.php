@@ -2,11 +2,20 @@
 
 $link = mysqli_connect("127.0.0.1", "root", "root", "fitcrm");
 
-$res = getTablesWithFields($link,'fitcrm',['name']);
+$res = getTablesWithFields($link,'fitcrm',['name','email']);
 
 print_r($res);
 
-function getTablesWithFields($link,$database,$fields){
+
+/**
+ * Funcion que nos ayuda a obtener las tablas de una base de datos
+ * que continen las columnas indicadas
+ * @param $link
+ * @param $database
+ * @param $columns
+ * @return array
+ */
+function getTablesWithFields($link,$database,$columns){
     $sql = "SHOW FULL TABLES FROM $database";
 
     $rs = mysqli_query($link, $sql);
@@ -26,16 +35,16 @@ function getTablesWithFields($link,$database,$fields){
 
         $arr_aux = [];
 
-        for ($i=0; $i < count($fields); $i++) {
-            $arr_aux[$fields[$i]] = false;
+        for ($i=0; $i < count($columns); $i++) {
+            $arr_aux[$columns[$i]] = false;
         }
         
 
         foreach ($columns_name as $column_name) {
             
-            for ($i=0; $i < count($fields); $i++) {
-                if (!$arr_aux[$fields[$i]] && $column_name['Field'] == $fields[$i]) {
-                    $arr_aux[$fields[$i]] = true;
+            for ($i=0; $i < count($columns); $i++) {
+                if (!$arr_aux[$columns[$i]] && $column_name['Field'] == $columns[$i]) {
+                    $arr_aux[$columns[$i]] = true;
                 }  
             }
 
